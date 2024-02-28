@@ -60,6 +60,30 @@
 
 <script>
 
+const notes = document.getElementsByClassName("key");
+const audio = document.getElementsByTagName("audio");
+
+function endTransition(e){
+  if(e.propertyName!=="transform")return;
+  this.classList.remove("playing");
+  }
+for(let index=0;index<notes.length;index++){
+ notes[index].addEventListener('transitionend',endTransition);
+}
+
+let map=new Map();
+for(let i=0;i<notes.length;i++){
+  map.set(notes[i].getAttribute('data-key'),{node:notes[i],audio:audio[i]});
+}
+window.addEventListener("keydown", (event) => {
+  const key = event.keyCode;
+  let pressed=map.get(key.toString());
+      pressed.node.classList.add("playing");
+      pressed.audio.currentTime=0;
+      pressed.audio.play();
+    });
+
+
 </script>
 
 
