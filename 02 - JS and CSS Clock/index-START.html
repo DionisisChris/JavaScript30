@@ -63,12 +63,49 @@
       background: black;
       position: absolute;
       top: 50%;
+      transform:rotate(90deg);
+      transform-origin: 100%;
+      transition:all 0.05s;
     }
 
   </style>
 
   <script>
 
+    let date=new Date();
+    let hours=date.getHours();
+    let minutes=date.getMinutes();
+    let seconds=date.getSeconds();
+    let degreesSeconds=6*seconds+90;
+    let degreesMinutes=6*minutes+90;
+    let degreesHours=30*hours+90;
+    document.querySelector(".hour-hand").style.transform=`rotate(${degreesHours}deg)`;
+    document.querySelector(".min-hand").style.transform=`rotate(${degreesMinutes}deg)`;
+    document.querySelector(".second-hand").style.transform=`rotate(${degreesSeconds}deg)`;
+
+    setInterval(()=>{
+      if(seconds===60){seconds=0;minutes++; degreesMinutes=6*minutes+90;     document.querySelector(".min-hand").style.transform=`rotate(${degreesMinutes}deg)`;}
+      if(minutes===60){minutes=0;hours++; degreesHours=30*hours+90;     document.querySelector(".hour-hand").style.transform=`rotate(${degreesHours}deg)`;}
+      if(hours===24){hours=0;}  
+      // console.log(hours+":"+minutes+":"+seconds);
+      degreesSeconds=6*seconds+90;
+
+      document.querySelector(".second-hand").style.transform=`rotate(${degreesSeconds}deg)`;
+
+      seconds++;
+
+    },1000);
+
+    // while(seconds<=60){
+    //   if(seconds===60){seconds=0;minutes++;}
+    //   if(minutes===60){minutes=0;hours++;}
+    //   if(hours===24){hours=0;}
+      
+    //   setTimeout(()=>{
+    //     seconds++;
+    //   },1000);
+    //   console.log(hours+":"+minutes+":"+seconds);
+    // }
 
   </script>
 </body>
