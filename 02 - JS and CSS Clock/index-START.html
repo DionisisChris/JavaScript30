@@ -87,7 +87,6 @@
       if(seconds===60){seconds=0;minutes++; degreesMinutes=6*minutes+90;     document.querySelector(".min-hand").style.transform=`rotate(${degreesMinutes}deg)`;}
       if(minutes===60){minutes=0;hours++; degreesHours=30*hours+90;     document.querySelector(".hour-hand").style.transform=`rotate(${degreesHours}deg)`;}
       if(hours===24){hours=0;}  
-      // console.log(hours+":"+minutes+":"+seconds);
       degreesSeconds=6*seconds+90;
 
       document.querySelector(".second-hand").style.transform=`rotate(${degreesSeconds}deg)`;
