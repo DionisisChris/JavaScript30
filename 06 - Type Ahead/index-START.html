@@ -1,23 +1,100 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <title>Type Ahead 👀</title>
-  <link rel="stylesheet" href="style.css">
-  <link rel="icon" href="https://fav.farm/🔥" />
-</head>
-<body>
+  <head>
+    <meta charset="UTF-8" />
+    <title>Type Ahead 👀</title>
+    <link rel="stylesheet" href="style.css" />
+    <link rel="icon" href="https://fav.farm/🔥" />
+  </head>
 
-  <form class="search-form">
-    <input type="text" class="search" placeholder="City or State">
-    <ul class="suggestions">
-      <li>Filter for a city</li>
-      <li>or a state</li>
-    </ul>
-  </form>
-<script>
-const endpoint = 'https://gist.githubusercontent.com/Miserlou/c5cd8364bf9b2420bb29/raw/2bf258763cdddd704f8ffd3ea9a3e81d25e2c6f6/cities.json';
+  <body>
+    <form class="search-form">
+      <input type="text" class="search" placeholder="City or State" />
+      <ul class="suggestions">
+        <li>Filter for a city</li>
+        <li>or a state</li>
+      </ul>
+    </form>
+    <script>
+      const endpoint =
+        "https://gist.githubusercontent.com/Miserlou/c5cd8364bf9b2420bb29/raw/2bf258763cdddd704f8ffd3ea9a3e81d25e2c6f6/cities.json";
+      // const getData = async (endpoint) => {
+      //   const element = document.querySelector(".search");
+      //   const response = await fetch(endpoint);
+      //   const data = await response.json();
+      //   const list = document.querySelector(".suggestions");
+      //   element.addEventListener("input", () => {
+      //     while (list.firstChild) {
+      //       list.removeChild(list.firstChild);
+      //     }
 
-</script>
-</body>
+      //     data.forEach((datum) => {
+      //       // const text=document.createTextNode(element.city+","+element.state);
+      //       if (
+      //         datum.city.includes(element.value) ||
+      //         datum.state.includes(element.value)
+      //       ) {
+      //         let city = datum.city;
+      //         let state = datum.state;
+      //         let stringToHightlight =
+      //           "<span class='hl'>" + element.value + "</span>";
+      //         if (datum.city.includes(element.value)) {
+      //           city = datum.city.replaceAll(element.value, stringToHightlight);
+      //         }
+      //         if (datum.state.includes(element.value)) {
+      //           state = datum.state.replaceAll(
+      //             element.value,
+      //             stringToHightlight
+      //           );
+      //         }
+
+      //         const node = document.createElement("li");
+      //         node.innerHTML = city + "," + state;
+      //         list.appendChild(node);
+      //       }
+      //     });
+      //   });
+      // };
+      // getData(endpoint);
+      const cities = [];
+      fetch(endpoint)
+        .then((blob) => blob.json())
+        .then((data) => cities.push(...data));
+
+      function findMatch(word, data) {
+        return data.filter((place) => {
+          const regex = new RegExp(word, "gi");
+          return place.city.match(regex) || place.state.match(regex);
+        });
+      }
+      const search = document.querySelector(".search");
+      const sugestions = document.querySelector(".suggestions");
+
+      function displayMatches() {
+        const matchArray = findMatch(this.value, cities);
+        const html = matchArray
+          .map((place) => {
+            const regex = new RegExp(this.value, "gi");
+            const cityName = place.city.replace(
+              regex,
+              `<span class='hl'>${this.value}</span>`
+            );
+            const stateName = place.state.replace(
+              regex,
+              `<span class='hl'>${this.value}</span>`
+            );
+            const numbersWithComa = (number) => {
+              return number.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+            };
+            return `<li>
+                <span class="name">${cityName},${stateName}</span>
+                  <span>${numbersWithComa(place.population)}</span>
+              </li>`;
+          })
+          .join("");
+        sugestions.innerHTML = html;
+      }
+      search.addEventListener("input", displayMatches);
+    </script>
+  </body>
 </html>
